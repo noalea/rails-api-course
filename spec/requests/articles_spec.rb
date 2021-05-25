@@ -23,5 +23,13 @@ RSpec.describe ArticlesController do
 				)
 			end
 		end
+
+		it 'returns articles from most recent' do
+			older_article = FactoryBot.create(:article, created_at: 1.hour.ago, slug: 'old-article')
+			recent_article = FactoryBot.create(:article, slug: 'new-article')
+			get '/articles'
+			ids = json_data.map { |item| item[:id].to_i }
+			expect(ids).to eq([recent_article.id, older_article.id])
+		end
 	end
 end
